@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import MainLayout from '@/ui/layouts/MainLayout'
 import LottoPage from '@/ui/pages/LottoPage'
 import RspPage from '@/ui/pages/RspPage'
-import BoardListPage from '@/ui/pages/BoardListPage'
+import BoardListWithPagingPage from '@/ui/pages/BoardListWithPagingPage'
 
 const routes = [
   {
@@ -23,7 +23,7 @@ const routes = [
       {
         path: '/boards',
         loader: () => '게시판',
-        element: <BoardListPage />,
+        element: <BoardListWithPagingPage />,
       },
     ],
   },
