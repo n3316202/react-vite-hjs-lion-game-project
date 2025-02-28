@@ -1,9 +1,12 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import BoardPagingnation from '../components/board/BoardPagingnation'
+import styled from 'styled-components'
+import Pagination from 'react-js-pagination'
 
 //https://sample.bmaster.kro.kr/contacts?pageno=1&pagesize=10
 
-const BoardListPage = () => {
+const BoardListWithPagingPage = () => {
   const initPaging = {
     activePage: 1, // 현재 페이지
     limit: 10, // 한 페이지 당 보여질 게시물 갯수
@@ -37,8 +40,40 @@ const BoardListPage = () => {
     const { name, value } = e.target
     console.log(name + '::' + value)
 
-    setPaging(setPaging.data.filter((contact) => contact.no !== value))
+    let filterdContacts = paging.data.filter((contact) => {
+      console.log(contact)
+      return contact.no !== value
+    })
+
+    setPaging((prev) => ({
+      ...prev,
+      data: filterdContacts,
+    }))
   }
+
+  const handlePageChange = (pageNumber) => {
+    console.log(pageNumber)
+    console.log(typeof pageNumber)
+
+    //setPaging((prev) => ({ ...prev, activePage: pageNumber }))
+
+    axios
+      .get(`https://sample.bmaster.kro.kr/contacts?pageno=${pageNumber}&pagesize=${paging.pageCount}`)
+      .then((res) => {
+        console.log(res)
+
+        setPaging((prev) => ({
+          ...prev,
+          data: res.data.contacts,
+          totalCount: res.data.totalcount,
+          activePage: pageNumber,
+        }))
+
+        console.log(paging)
+      })
+      .catch((error) => console.log(error))
+  }
+
   return (
     <div className='container mt-3'>
       <div className='container-fluid'>
@@ -99,7 +134,15 @@ const BoardListPage = () => {
               </table>
             </div>
             {/* 페이징           */}
-                    
+            <PaginationBox>
+              <Pagination
+                activePage={paging.activePage}
+                itemsCountPerPage={paging.limit}
+                totalItemsCount={paging.totalCount}
+                pageRangeDisplayed={paging.pageCount}
+                onChange={handlePageChange}
+              ></Pagination>
+            </PaginationBox>
             <hr />
           </div>
         </div>
@@ -109,4 +152,46 @@ const BoardListPage = () => {
   // <!-- /.container-fluid -->);
 }
 
-export default BoardListPage
+const PaginationBox = styled.div`
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  ul.pagination li {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e2e2e2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+  }
+  ul.pagination li:first-child {
+    border-radius: 5px 0 0 5px;
+  }
+  ul.pagination li:last-child {
+    border-radius: 0 5px 5px 0;
+  }
+  ul.pagination li a {
+    text-decoration: none;
+    color: #337ab7;
+    font-size: 1rem;
+  }
+  ul.pagination li.active a {
+    color: white;
+  }
+  ul.pagination li.active {
+    background-color: #337ab7;
+  }
+  ul.pagination li a:hover,
+  ul.pagination li a.active {
+    color: blue;
+  }
+`
+export default BoardListWithPagingPage

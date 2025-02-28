@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": ".", //절대경로 디렉토리 설정
     "paths": {
+      // 하위 디렉터리용 상대경로 매핑
       "@/*": ["./src/*"]
     }
   },
