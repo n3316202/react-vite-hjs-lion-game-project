@@ -1,5 +1,4 @@
 import { routes } from '@/router/Router'
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Header = () => {
@@ -7,7 +6,7 @@ const Header = () => {
     <>
       <nav className='navbar navbar-expand-lg navbar-dark bg-dark'>
         <div className='container-fluid'>
-          <a className='navbar-brand' href='{() => false}'>
+          <a className='navbar-brand' href='#'>
             React
           </a>
           <button
@@ -23,21 +22,21 @@ const Header = () => {
           </button>
           <div className='collapse navbar-collapse' id='navbarSupportedContent'>
             <ul className='navbar-nav me-auto mb-2 mb-lg-0'>
-              {routes &&
-                routes.map((route) => (
+              {routes[0].children &&
+                routes[0].children.map((child) => (
                   //console.log(route.loader() + route.path)
                   <li className='nav-item dropdown'>
                     <Link
-                      to={route.path}
-                      className='nav-link dropdown-toggle'
+                      to={child.path}
+                      className='nav-link' //dropdown-toggle'
                       id='navbarDropdown'
                       role='button'
                       data-bs-toggle='dropdown'
                       aria-expanded='false'
                     >
-                      {route.loader()}
+                      {child.loader()}
                     </Link>
-                    {route.children && (
+                    {/* {route.children && (
                       <ul className='dropdown-menu' aria-labelledby='navbarDropdown'>
                         {route.children.map((child) => (
                           <li key={child.loader()}>
@@ -47,7 +46,7 @@ const Header = () => {
                           </li>
                         ))}
                       </ul>
-                    )}
+                    )} */}
                   </li>
                 ))}
             </ul>
